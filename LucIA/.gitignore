@@ -1,0 +1,16 @@
+# Python environment
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Temporary files
+temp_audio.wav
+*.log
+
+# IDE files
+.vscode/
+.idea/
+
+# Environment variables
+.env
