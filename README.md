@@ -12,6 +12,28 @@ LucIA is a local, private, and fast AI assistant running on Pop!_OS using NVIDIA
 
 ### 2. System Dependencies
 Install the required system libraries for audio and Python development:
-```bash
-sudo apt update
-sudo apt install ffmpeg portaudio19-dev python3.12-dev python3.12-venv
+
+`sudo apt update`
+`sudo apt install ffmpeg portaudio19-dev python3.12-dev python3.12-venv`
+
+### 3. LLM Setup (Ollama)
+Download and run the brain (Llama 3.1):
+
+`ollama pull llama3.1`
+
+### 4. Project Setup
+Create a virtual environment and install Python dependencies:
+
+`python3 -m venv venv`
+`source venv/bin/activate`
+`pip install -r requirements.txt`
+
+## 🛠 Project Structure
+- `src/audio`: Voice recognition (Faster-Whisper).
+- `src/llm`: Brain logic (Ollama connection).
+- `src/ui`: Graphical Interface (Upcoming).
+- `assets/voice_samples`: Storage for voice cloning profiles.
+- `context`: Future storage for documents (RAG).
+
+## 📝 License
+This project is licensed under the MIT License.

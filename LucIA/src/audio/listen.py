@@ -13,7 +13,7 @@ def listen_mic():
     """
     recognizer = sr.Recognizer()
     
-    with sr.Microphone() as source:
+    with sr.Microphone(device_index=2, sample_rate=48000) as source:
         print("\n[System] Adjusting for ambient noise...")
         recognizer.adjust_for_ambient_noise(source, duration=1)
         
