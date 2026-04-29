@@ -2,8 +2,11 @@ import speech_recognition as sr
 from faster_whisper import WhisperModel
 import os
 
-# Configuration for the Whisper Model on RTX 4060
-# Using 'small' for a balance between speed and accuracy
+# -----------------------------------------------------------------------------
+# Global Model Setup
+# -----------------------------------------------------------------------------
+# Setting up Whisper Model (RTX 4060 targeted)
+# Using 'small' model inside float16 for the best speed/accuracy ratio
 print("Loading Whisper model on CUDA (RTX 4060)...")
 whisper_model = WhisperModel("small", device="cuda", compute_type="float16")
 
@@ -14,37 +17,48 @@ def listen_mic():
     recognizer = sr.Recognizer()
     
     with sr.Microphone(device_index=2, sample_rate=48000) as source:
+        
+        # ---------------------------------------------------------------------
+        # Environment Calibration
+        # ---------------------------------------------------------------------
         print("\n[System] Adjusting for ambient noise...")
         recognizer.adjust_for_ambient_noise(source, duration=1)
         
         print("🎤 [LucIA] Listening... (Speak now)")
         try:
-            # Captures the audio
+            # -----------------------------------------------------------------
+            # Audio Capture
+            # -----------------------------------------------------------------
             audio_data = recognizer.listen(source, timeout=10, phrase_time_limit=15)
             print("[System] Transcribing...")
             
-            # Temporary file to store the audio
             temp_filename = "temp_audio.wav"
             with open(temp_filename, "wb") as f:
                 f.write(audio_data.get_wav_data())
             
-            # Transcription process
+            # -----------------------------------------------------------------
+            # Transcription Process
+            # -----------------------------------------------------------------
             segments, info = whisper_model.transcribe(temp_filename, language="es")
             
             transcribed_text = ""
             for segment in segments:
                 transcribed_text += segment.text
             
-            # Clean up temporary file
+            # -----------------------------------------------------------------
+            # Cleanup
+            # -----------------------------------------------------------------
             if os.path.exists(temp_filename):
                 os.remove(temp_filename)
                 
             return transcribed_text.strip()
             
         except sr.WaitTimeoutError:
+            # Handle scenario where user says nothing
             print("[System] No speech detected.")
             return ""
         except Exception as e:
+            # Handle hardware mismatches or device issues
             print(f"[Error] Microphone or Transcription error: {e}")
             return ""
 
