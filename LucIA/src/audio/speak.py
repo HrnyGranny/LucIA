@@ -2,8 +2,12 @@ import os
 import torch
 from TTS.api import TTS
 import sounddevice as sd
-import soundfile as sf
-import tempfile
+import numpy as np
+
+try:
+    from audio.formatter import clean_text_for_tts
+except ImportError:
+    from formatter import clean_text_for_tts
 
 # -----------------------------------------------------------------------------
 # Global Model Setup
@@ -36,26 +40,24 @@ def speak_text(text, language="es"):
              
     try:
         # ---------------------------------------------------------------------
-        # Speech Synthesis
+        # Text Sanitization
         # ---------------------------------------------------------------------
-        temp_audio = "output_speech.wav"
-        print(f"[LucIA] Speaking: '{text}'")
+        clean_text = clean_text_for_tts(text)
+
+        print(f"[LucIA] Speaking: '{clean_text}'")
         
-        tts.tts_to_file(text=text, speaker_wav=speaker_wav, language=language, file_path=temp_audio)
+        # ---------------------------------------------------------------------
+        # Speech Synthesis in RAM
+        # ---------------------------------------------------------------------
+        wav_data = tts.tts(text=clean_text, speaker_wav=speaker_wav, language=language)
         
         # ---------------------------------------------------------------------
         # Audio Playback
         # ---------------------------------------------------------------------
-        data, fs = sf.read(temp_audio)
-        sd.play(data, fs)
+        audio_array = np.array(wav_data, dtype=np.float32)
+        sd.play(audio_array, samplerate=24000)
         sd.wait() # Wait completely until file is done playing
         
-        # ---------------------------------------------------------------------
-        # Resource Cleanup
-        # ---------------------------------------------------------------------
-        if os.path.exists(temp_audio):
-            os.remove(temp_audio)
-            
         # Explicit VRAM release
         # Prevents progressive memory fragmentation on the RTX 4060
         if torch.cuda.is_available():
