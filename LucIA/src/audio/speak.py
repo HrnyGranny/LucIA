@@ -66,4 +66,4 @@ def speak_text(text, language="es"):
 
 if __name__ == "__main__":
     # Test script execution
-    speak_text("Hola, soy Lucía. Estoy lista para ayudarte.")
+    speak_text("Hola, soy Lucía. Estoy lista para ayudarte. ¿Cómo puedo asistirte hoy? Hola Maricarmen", language="es")

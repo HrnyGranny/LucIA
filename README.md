@@ -27,7 +27,7 @@ ollama pull llama3.1
 Create a virtual environment and install Python dependencies:
 
 ```bash
-python3 -m venv venv
+python3 -m venv venv // ~/.pyenv/versions/3.11.9/bin/python -m venv venv
 source venv/bin/activate
 pip install -r LucIA/requirements.txt
 ```

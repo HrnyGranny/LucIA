@@ -8,7 +8,7 @@ import os
 # Setting up Whisper Model (RTX 4060 targeted)
 # Using 'small' model inside float16 for the best speed/accuracy ratio
 print("Loading Whisper model on CUDA (RTX 4060)...")
-whisper_model = WhisperModel("small", device="cuda", compute_type="float16")
+whisper_model = WhisperModel("small", device="cpu", compute_type="int8")
 
 def listen_mic():
     """
@@ -16,7 +16,7 @@ def listen_mic():
     """
     recognizer = sr.Recognizer()
     
-    with sr.Microphone(device_index=2, sample_rate=48000) as source:
+    with sr.Microphone(device_index=18, sample_rate=48000) as source:
         
         # ---------------------------------------------------------------------
         # Environment Calibration
